@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ABCD Play & Learn</title>
+<!-- Restored build: preserves the complete ABCD learning and MCQ interface. -->
+<style>
+:root{--blue:#168cff;--green:#18c76a;--yellow:#ffd52e;--purple:#8a4dff;--ink:#17345c}
+*{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:linear-gradient(#72d7ff,#e5fbff 48%,#8ce47e);min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 12% 14%,#fff 0 3px,transparent 4px),radial-gradient(circle at 82% 23%,#fff9 0 5px,transparent 6px);background-size:90px 80px;opacity:.8}
+.app{max-width:760px;margin:auto;min-height:100vh;padding:16px;position:relative}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.logo{font-weight:1000;font-size:clamp(20px,5vw,30px);color:#fff;text-shadow:0 3px 0 #1973c6,0 6px 0 #1457a0;letter-spacing:.5px}
+.iconbtn,.btn,.choice,.letter{border:0;cursor:pointer;font:inherit;font-weight:900;transition:transform .12s,filter .12s;touch-action:manipulation}
+button:active{transform:translateY(3px) scale(.98)!important;filter:brightness(.96)}
+.iconbtn{width:46px;height:46px;border-radius:50%;background:linear-gradient(#55c5ff,#0878ec);color:white;border:3px solid #fff;box-shadow:0 4px 0 #0759ad;font-size:22px}
+.panel{background:#ffffffed;border:5px solid white;border-radius:30px;box-shadow:0 9px 0 #2698e4,0 15px 25px #1763a344;padding:clamp(18px,5vw,30px);text-align:center;position:relative}
+h1{font-size:clamp(28px,7vw,48px);margin:4px 0 8px;color:#ff4d4d;text-shadow:0 3px #ffd15b}
+h2{font-size:clamp(22px,5vw,32px);margin:6px 0 14px}
+p{line-height:1.45}.mascot{font-size:clamp(64px,17vw,110px);filter:drop-shadow(0 8px 0 #b9e5ff);margin:4px}
+.btn{display:block;width:min(100%,360px);margin:12px auto;padding:15px 18px;border-radius:22px;color:white;font-size:20px;border:3px solid white;box-shadow:0 6px 0 #1766a6,0 8px 12px #0002;text-shadow:0 1px #0002;background:linear-gradient(#36baff,#0879e9)}
+.btn.green{background:linear-gradient(#58ed91,#09ae51);box-shadow:0 6px 0 #078344,0 8px 12px #0002}.btn.yellow{color:#744100;background:linear-gradient(#fff56c,#ffb900);box-shadow:0 6px 0 #c77b00,0 8px 12px #0002}.btn.purple{background:linear-gradient(#c28aff,#7636ed);box-shadow:0 6px 0 #5420ac,0 8px 12px #0002}
+.screen{display:none;animation:pop .25s ease}.screen.active{display:block}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.letter-display{font-size:clamp(90px,25vw,150px);font-weight:1000;line-height:1;color:var(--letter,#ff3e4d);text-shadow:0 7px 0 #c92336,0 12px 12px #0002;margin:8px}
+.picture{font-size:clamp(76px,20vw,120px);margin:4px;filter:drop-shadow(0 7px 0 #d8e8f5)}
+.word{font-size:clamp(26px,7vw,38px);font-weight:1000;margin:4px}.word span{color:#ff4b4b}
+.row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}.progress{height:14px;background:#dceeff;border-radius:99px;overflow:hidden;border:2px solid #b5d8ff;margin:10px 0 18px}.bar{height:100%;width:0;background:linear-gradient(90deg,#37e77a,#00adff);transition:width .25s}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.choice{background:linear-gradient(#fff,#eaf6ff);border:3px solid #5bc3ff;border-radius:18px;padding:15px 8px;min-height:72px;color:#15477f;box-shadow:0 4px 0 #b6dffb;font-size:clamp(15px,4vw,20px)}.choice.correct{background:#c8ffdc;border-color:#24c96a;color:#08783b}.choice.wrong{background:#ffe0e0;border-color:#ff6969;color:#b52222}
+.feedback{font-size:22px;font-weight:1000;min-height:32px;margin:12px 0 2px}.letter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:18px}.letter{aspect-ratio:1;border-radius:16px;color:white;font-size:clamp(20px,6vw,30px);border:3px solid #fff;box-shadow:0 4px 0 #2368a8;background:linear-gradient(#49c6ff,#087bea);text-shadow:0 2px #07549a}.letter:nth-child(4n+2){background:linear-gradient(#ffe95c,#ff9f00);box-shadow:0 4px 0 #bd7000}.letter:nth-child(4n+3){background:linear-gradient(#b990ff,#6c36e8);box-shadow:0 4px 0 #4e22aa}.letter:nth-child(4n){background:linear-gradient(#55e98d,#08a94f);box-shadow:0 4px 0 #078044}
+.small{font-size:14px;opacity:.8}.pill{display:inline-block;border-radius:99px;background:#e6f5ff;padding:8px 14px;font-weight:900}.sound{font-size:24px;vertical-align:middle}.footer{text-align:center;font-size:12px;padding:18px;color:#23618c}
+@media(max-width:420px){.app{padding:10px}.panel{padding:16px 12px;border-radius:24px}.letter-grid{gap:6px}.letter{border-radius:12px}.choices{gap:8px}.choice{padding:12px 5px;min-height:65px}}
+</style></head><body><main class="app">
+<header class="top"><div class="logo">🌈 ABCD PLAY & LEARN</div><button class="iconbtn" aria-label="Sound on/off" onclick="toggleSound()" id="soundBtn">🔊</button></header>
+<section class="screen active" id="home"><div class="panel"><div class="mascot">🧒🏻 🐶</div><h1>Learn ABCD!</h1><h2>Learn letters with fun ✨</h2><p>Letters, words, pictures and a fun quiz!</p><button class="btn yellow" onclick="show('learn')">📚 Learn ABCD</button><button class="btn green" onclick="startQuiz()">🎮 Play MCQ Quiz</button><button class="btn purple" onclick="show('letters')">🔤 Choose a Letter</button><p class="small">Tap a letter to hear its name and learn a word.</p></div></section>
+<section class="screen" id="learn"><div class="panel"><div class="row"><button class="iconbtn" onclick="show('home')">⌂</button><span class="pill" id="learnCount">Letter 1 of 26</span><button class="iconbtn" onclick="show('letters')">🔤</button></div><h2>Let's learn a letter!</h2><div class="letter-display" id="bigLetter">A</div><div class="picture" id="picture">🍎</div><div class="word" id="word"><span>A</span> for Apple</div><p id="learnHint">Tap “Hear it” to listen.</p><button class="btn yellow" onclick="speakCurrent()">🔊 Hear it</button><div class="row"><button class="btn" style="width:42%;margin:8px 0" onclick="moveLetter(-1)">⬅ Back</button><button class="btn green" style="width:42%;margin:8px 0" onclick="moveLetter(1)">Next ➜</button></div><button class="btn purple" onclick="startQuiz()">Ready? Take the quiz!</button></div></section>
+<section class="screen" id="quiz"><div class="panel"><div class="row"><button class="iconbtn" onclick="show('home')">⌂</button><span class="pill" id="qCount">Question 1 / 10</span><span class="pill">⭐ <span id="score">0</span></span></div><div class="progress"><div class="bar" id="bar"></div></div><h2>Which answer is correct?</h2><div class="row"><div class="letter-display" id="qLetter">A</div><div class="picture" id="qPic">🍎</div></div><p class="word" id="qPrompt">A is for…?</p><div class="choices" id="choices"></div><div class="feedback" id="feedback" aria-live="polite"></div><button class="btn green" id="nextBtn" style="display:none" onclick="nextQuestion()">Next question ➜</button></div></section>
+<section class="screen" id="letters"><div class="panel"><button class="iconbtn" style="float:left" onclick="show('home')">⌂</button><h2>Choose a Letter</h2><p>Tap any letter to learn it!</p><div class="letter-grid" id="letterGrid"></div><button class="btn yellow" onclick="show('learn')">📚 Start learning</button></div></section>
+<section class="screen" id="result"><div class="panel"><div class="mascot">🏆🎉</div><h1>Great job!</h1><h2 id="resultText">You did it!</h2><p id="resultScore"></p><button class="btn green" onclick="startQuiz()">🔁 Play again</button><button class="btn yellow" onclick="show('learn')">📚 Learn more</button><button class="btn purple" onclick="show('home')">🏠 Home</button></div></section>
+<div class="footer">Made for little learners 💛 • Learn a little every day!</div></main>
+<script>
+const data=[
+['A','Apple','🍎','ay'],['B','Ball','⚽','bee'],['C','Cat','🐱','see'],['D','Dog','🐶','dee'],['E','Elephant','🐘','ee'],['F','Fish','🐟','eff'],['G','Grapes','🍇','jee'],['H','House','🏠','aitch'],['I','Ice cream','🍦','eye'],['J','Juice','🧃','jay'],['K','Kite','🪁','kay'],['L','Lion','🦁','ell'],['M','Moon','🌙','em'],['N','Nest','🪺','en'],['O','Orange','🍊','oh'],['P','Pencil','✏️','pee'],['Q','Queen','👑','cue'],['R','Rabbit','🐰','ar'],['S','Sun','☀️','ess'],['T','Tiger','🐯','tee'],['U','Umbrella','☂️','you'],['V','Van','🚐','vee'],['W','Watch','⌚','double-you'],['X','Xylophone','🎼','ex'],['Y','Yo-yo','🪀','why'],['Z','Zebra','🦓','zee']];
+let current=0, qi=0, score=0, questions=[], answered=false, soundOn=true;
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='learn')renderLearn();if(id==='letters')renderLetters();window.scrollTo(0,0)}
+let fallbackAudio=null;
+let speechTimer=null;
+let speechToken=0;
+function stopAllVoice(){
+ if(speechTimer){clearTimeout(speechTimer);speechTimer=null;}
+ try{if('speechSynthesis' in window)window.speechSynthesis.cancel();}catch(e){}
+ try{if(fallbackAudio){fallbackAudio.pause();fallbackAudio.currentTime=0;}}catch(e){}
+}
+function playFallbackVoice(text,token){
+ if(!soundOn||token!==speechToken)return;
+ try{
+  if(fallbackAudio){fallbackAudio.pause();fallbackAudio.currentTime=0;}
+  const url='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-US&q='+encodeURIComponent(String(text).slice(0,180));
+  fallbackAudio=new Audio(url);
+  fallbackAudio.preload='auto';
+  fallbackAudio.onended=()=>{const h=document.getElementById('learnHint');if(h)h.textContent='Tap “Hear it” to listen again.';};
+  fallbackAudio.onerror=()=>{const h=document.getElementById('learnHint');if(h)h.textContent='Voice unavailable. Check internet and Android Text-to-speech settings.';};
+  const p=fallbackAudio.play();
+  if(p&&p.catch)p.catch(()=>{const h=document.getElementById('learnHint');if(h)h.textContent='Voice could not start. Check internet connection.';});
+ }catch(e){const h=document.getElementById('learnHint');if(h)h.textContent='Voice unavailable. Check internet connection.';}
+}
+function speak(text){
+ if(!soundOn)return;
+ const token=++speechToken;
+ stopAllVoice();
+ const phrase=String(text);
+ const hint=document.getElementById('learnHint');
+ if(hint)hint.textContent='Playing English voice…';
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
+  playFallbackVoice(phrase,token);return;
+ }
+ try{
+  const synth=window.speechSynthesis;
+  const u=new SpeechSynthesisUtterance(phrase);
+  u.lang='en-US';u.rate=0.88;u.pitch=1;u.volume=1;
+  let started=false;
+  u.onstart=()=>{started=true;if(speechTimer){clearTimeout(speechTimer);speechTimer=null;}if(hint)hint.textContent='Playing English voice…';};
+  u.onend=()=>{if(speechTimer){clearTimeout(speechTimer);speechTimer=null;}if(hint)hint.textContent='Tap “Hear it” to listen again.';};
+  u.onerror=()=>{if(speechTimer){clearTimeout(speechTimer);speechTimer=null;}playFallbackVoice(phrase,token);};
+  const voices=synth.getVoices?synth.getVoices():[];
+  const english=voices.filter(v=>/^en([_-]|$)/i.test(v.lang||''));
+  const preferred=english.find(v=>/natural|neural|google us english|microsoft aria|jenny|samantha/i.test(v.name||''))||english.find(v=>/^en-US/i.test(v.lang||''))||english[0];
+  if(preferred)u.voice=preferred;
+  synth.resume();synth.speak(u);
+  // Some APK WebViews silently accept speechSynthesis but never produce sound.
+  speechTimer=setTimeout(()=>{if(!started){try{synth.cancel();}catch(e){}playFallbackVoice(phrase,token);}},1600);
+ }catch(e){playFallbackVoice(phrase,token);}
+}
+function speakCurrent(){let d=data[current];speak(d[0]+' for '+d[1]+'.')}
+function renderLearn(){let d=data[current];document.getElementById('learnCount').textContent=`Letter ${current+1} of 26`;document.getElementById('bigLetter').textContent=d[0];document.getElementById('picture').textContent=d[2];document.getElementById('word').innerHTML=`<span>${d[0]}</span> for ${d[1]}`;document.getElementById('bigLetter').style.setProperty('--letter',['#ff3e4d','#ffae00','#168cff','#19bb65'][current%4]);}
+function moveLetter(n){current=(current+n+26)%26;renderLearn();speakCurrent()}
+function renderLetters(){let g=document.getElementById('letterGrid');g.innerHTML='';data.forEach((d,i)=>{let b=document.createElement('button');b.className='letter';b.textContent=d[0];b.onclick=()=>{current=i;show('learn');speakCurrent()};g.appendChild(b)})}
+function startQuiz(){questions=[...data].sort(()=>Math.random()-.5).slice(0,10);qi=0;score=0;show('quiz');renderQuestion()}
+function renderQuestion(){answered=false;let d=questions[qi];document.getElementById('qCount').textContent=`Question ${qi+1} / ${questions.length}`;document.getElementById('score').textContent=score;document.getElementById('bar').style.width=(qi/questions.length*100)+'%';document.getElementById('qLetter').textContent=d[0];document.getElementById('qPic').textContent=d[2];document.getElementById('qPrompt').textContent=`${d[0]} is for…?`;document.getElementById('feedback').textContent='';document.getElementById('nextBtn').style.display='none';let wrong=data.filter(x=>x[0]!==d[0]).sort(()=>Math.random()-.5).slice(0,3);let opts=[d,...wrong].sort(()=>Math.random()-.5);let c=document.getElementById('choices');c.innerHTML='';opts.forEach(opt=>{let b=document.createElement('button');b.className='choice';b.textContent=opt[1];b.dataset.letter=opt[0];b.onclick=()=>choose(b,opt,d);c.appendChild(b)})}
+function choose(btn,opt,d){if(answered)return;answered=true;let all=[...document.querySelectorAll('.choice')];all.forEach(b=>{b.disabled=true;if(b.dataset.letter===d[0])b.classList.add('correct')});if(opt[0]===d[0]){score++;document.getElementById('feedback').textContent='✅ Correct! Great job!';document.getElementById('feedback').style.color='#07984a';speak('Correct! '+d[0]+' for '+d[1])}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='💛 Almost! It is '+d[0]+' for '+d[1]+'.';document.getElementById('feedback').style.color='#d74747';speak('Try again next time. '+d[0]+' for '+d[1])}document.getElementById('score').textContent=score;document.getElementById('nextBtn').style.display='block'}
+function nextQuestion(){qi++;if(qi<questions.length)renderQuestion();else{show('result');document.getElementById('resultText').textContent=score>=8?'Amazing work! 🌟':score>=5?'Well done! Keep practicing!':'Good try! Practice makes you better!';document.getElementById('resultScore').textContent=`You got ${score} out of ${questions.length} correct.`;document.getElementById('bar').style.width='100%';speak('Quiz complete. You got '+score+' out of 10.')}}
+renderLearn();renderLetters();
+</script></body></html>
